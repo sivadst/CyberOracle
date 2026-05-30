@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   // Simple check for our JWT token in cookies
   // Note: For a real production app, you would verify the JWT signature here
   // or use next-auth. For this MVP, we just check existence to prevent basic unauthorized access.

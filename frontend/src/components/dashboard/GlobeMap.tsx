@@ -51,6 +51,7 @@ export default function GlobeMap({ className }: GlobeMapProps) {
         { location: [-23.5505, -46.6333], size: 0.04 }, // Sao Paulo
         { location: [35.6762, 139.6503], size: 0.05 }, // Tokyo
       ],
+      // @ts-expect-error onRender is not defined in cobe's COBEOptions types but is supported at runtime
       onRender: (state) => {
         if (!pointerInteracting.current) {
           phi += 0.003;
