@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
           <h3 className="text-sm font-semibold text-white mb-4">Category Breakdown</h3>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
-              <Pie data={catData} cx="50%" cy="50%" outerRadius={90} innerRadius={45} paddingAngle={3} dataKey="value" label={({ name, percent }: { name: string; percent?: number }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
+              <Pie data={catData} cx="50%" cy="50%" outerRadius={90} innerRadius={45} paddingAngle={3} dataKey="value" label>
                 {catData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
               <Tooltip contentStyle={chartStyle} />
