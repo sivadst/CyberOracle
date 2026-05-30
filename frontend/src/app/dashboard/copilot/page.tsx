@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Send, Sparkles, Shield, Lightbulb } from "lucide-react";
-import api, { type CopilotResponse } from "@/lib/api";
+import { Bot, Send, Sparkles, Lightbulb } from "lucide-react";
+import api from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useTypewriter } from "@/lib/hooks";
 

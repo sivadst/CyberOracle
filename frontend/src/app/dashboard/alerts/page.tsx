@@ -25,6 +25,7 @@ export default function AlertsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [filter]);
 
   async function handleAcknowledge(id: string) {

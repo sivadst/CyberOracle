@@ -266,3 +266,13 @@ input:focus, textarea:focus, select:focus {
 .cyber-table tr:hover {
   background: rgba(0, 240, 255, 0.02);
 }
+
+/* Custom Additions for HOME.AI Landing Page */
+.mask-image-b {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+.interactive {
+  cursor: pointer;
+}

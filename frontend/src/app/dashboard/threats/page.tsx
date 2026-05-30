@@ -26,6 +26,7 @@ export default function ThreatsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [severity]);
 
   useEffect(() => {

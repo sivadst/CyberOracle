@@ -6,7 +6,9 @@ export function useTypewriter(text: string, speed = 15) {
 
   useEffect(() => {
     if (!text) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayedText("");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsTyping(false);
       return;
     }

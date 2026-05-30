@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { BarChart3 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar, LineChart, Line,
+  PieChart, Pie, Cell, BarChart, Bar,
 } from "recharts";
 import api, { type TimelinePoint } from "@/lib/api";
 
