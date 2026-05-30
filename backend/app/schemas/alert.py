@@ -11,7 +11,7 @@ class AlertCreate(BaseModel):
     threat_event_id: UUID | None = None
     rule_name: str | None = None
     source: str | None = None
-    metadata: dict | None = None
+    alert_metadata: dict | None = None
 
 
 class AlertUpdate(BaseModel):

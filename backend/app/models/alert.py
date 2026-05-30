@@ -44,7 +44,7 @@ class Alert(Base):
 
     rule_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     source: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    alert_metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     remediation_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
 
