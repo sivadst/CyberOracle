@@ -1,204 +1,121 @@
 <div align="center">
 
-# 🛡️ CyberOracle
+# 🌐 CyberOracle
+### AI-Powered Cyber Warfare Intelligence & Threat Analysis Ecosystem
 
-### Next-Generation AI Cyber Warfare & Threat Intelligence Ecosystem
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active_Defense_Matrix-00f0ff?style=for-the-badge&logo=shield" alt="Status" />
+  <img src="https://img.shields.io/badge/AI_Engine-Predictive_Active-39ff14?style=for-the-badge&logo=activity" alt="AI Engine" />
+  <img src="https://img.shields.io/badge/Frontend-Next.js_15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776ab?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
-[![Redis](https://img.shields.io/badge/Redis-7-dc382d?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ed?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-
-**An autonomous AI-powered Security Operations Center (SOC) platform combining real-time geospatial threat detection, ML-driven analysis, MITRE ATT&CK integration, and an AI copilot for enterprise-grade cyber defense.**
-
-[Features](#-features) • [Architecture](#-architecture) • [Quick Start](#-quick-start) • [Why CyberOracle?](#-why-cyberoracle-for-engineering-leaders) • [API Reference](#-api-reference)
+[**View Demo**](#) • [**Architecture**](#architecture) • [**Installation**](#installation) • [**Features**](#features)
 
 </div>
 
 ---
 
-## 🔮 Features
+## ⚡ Overview
+**CyberOracle** is a next-generation autonomous AI defense system designed for real-time threat detection, intelligence gathering, and SOC operations. Built with a stunning, futuristic **Palantir-inspired HUD interface**, it simulates and analyzes cyber warfare vectors globally in real-time.
 
-### 📡 Global SOC Command Center
-- **Geospatial Threat Visualization** — Interactive WebGL globe mapping live attack arcs worldwide.
-- **Real-Time Telemetry** — WebSocket-powered live threat feeds with terminal typewriter animations and tactical HUD overlays.
-- **Alert Pulse Systems** — Dynamic UI responses to critical infrastructure anomalies.
+It’s built as a portfolio project to showcase world-class UI/UX design, real-time WebSocket communication, and robust full-stack architecture.
 
-### 🤖 Autonomous AI Copilot
-- **Simulated Streaming Responses** — Fast, fluid typewriter token streams for incident investigation.
-- **Structured Reasoning** — Automated remediation steps mapped natively to MITRE ATT&CK kill chains.
-- **Confidence Scoring** — Algorithmic certainty metrics for all AI-generated defense recommendations.
+---
 
-### 🛡️ Enterprise Defense Systems
-- **IOC Intelligence Engine** — IP/Domain/Hash enrichment with external reputation scoring.
-- **MITRE ATT&CK Matrix** — Full tactic/technique mapping with heatmap visualization.
-- **Composite Threat Scoring** — Combines ML anomaly detection, IOC reputation, and historical context.
+## 🔥 Features
+- 🛡️ **Predictive AI Engine**: Simulates machine learning analysis of behavioral anomalies and calculates risk severity instantaneously.
+- 🌍 **Global Attack Map**: Interactive 3D visualization of cyber warfare vectors, plotting origin and destination IPs globally.
+- 📡 **Real-Time Threat Feed**: Live streaming of global cyber attack events, zero-day vulnerabilities, and CVE alerts over low-latency WebSockets.
+- 🎨 **Cinematic UI/UX**: Premium dark theme with glassmorphism, Framer Motion animations, neon glow accents, and responsive design.
 
 ---
 
 ## 🏗️ Architecture
 
-CyberOracle is built as a highly decoupled, scalable microservices architecture. 
-
 ```mermaid
 graph TD
-    %% Styling
-    classDef frontend fill:#0a0e17,stroke:#00f0ff,stroke-width:2px,color:#fff;
-    classDef backend fill:#111827,stroke:#bf5af2,stroke-width:2px,color:#fff;
-    classDef data fill:#1a1f2e,stroke:#39ff14,stroke-width:2px,color:#fff;
-    classDef workers fill:#111827,stroke:#ff6b35,stroke-width:2px,color:#fff;
-
-    subgraph "Presentation Layer (Next.js 15)"
-        UI[SOC Dashboard & GlobeMap]:::frontend
-        Copilot[AI Copilot Interface]:::frontend
-        Analytics[Threat Analytics & MITRE]:::frontend
+    subgraph Frontend [Next.js 15 Command Center]
+        UI[Shadcn/UI + Framer Motion]
+        Store[Zustand State]
+        Map[Cobe 3D Globe]
+        Charts[Recharts]
     end
 
-    subgraph "API Layer (FastAPI)"
-        Gateway[REST API Gateway]:::backend
-        WS[WebSocket Engine Room Pub/Sub]:::backend
-        
-        Gateway --> Auth[JWT + RBAC Middleware]
-        Gateway --> ML[Threat Scoring Engine]
-        Gateway --> Intelligence[IOC Enrichment]
+    subgraph Backend [FastAPI Threat Engine]
+        WS[WebSocket Manager]
+        Sim[AI Threat Simulator Task]
+        API[REST Endpoints]
+        DB[(PostgreSQL)]
+        Cache[(Redis Pub/Sub)]
     end
 
-    subgraph "Async Processing (Celery)"
-        Beat[Celery Beat Scheduler]:::workers
-        Worker[Celery Workers]:::workers
-        Beat -.->|Schedules Tasks| Worker
-    end
-
-    subgraph "Data & State"
-        PG[(PostgreSQL 16\nSQLAlchemy)]:::data
-        Redis[(Redis 7\nCache & Broker)]:::data
-    end
-
-    %% Connections
-    UI <-->|HTTP / JWT| Gateway
-    UI <-->|wss://| WS
-    Copilot <-->|HTTP| Gateway
-    
-    Gateway <--> PG
-    Gateway <--> Redis
-    WS <--> Redis
-    
-    Worker <--> PG
-    Worker <--> Redis
+    UI <-->|HTTPS| API
+    UI <-->|WSS Real-Time Stream| WS
+    WS <--> Cache
+    Sim --> Cache
+    API <--> DB
 ```
-
-### Production Engineering Highlights
-- **Resilient API Client**: Built-in Axios interceptors for JWT token lifecycle management and automatic retries.
-- **Strict Route Protection**: Next.js App Router `middleware.ts` enforces global authentication boundaries.
-- **Robust Error Boundaries**: Custom React error boundaries prevent cascading failures, maintaining the military SOC aesthetic even during exceptions.
-- **DevOps Orchestration**: Full `docker-compose` and `Makefile` integration for instant 1-click provisioning.
 
 ---
 
-## 🚀 Quick Start
+## 📂 Project Structure
+
+```text
+CyberOracle/
+├── frontend/                 # Next.js 15 App Router
+│   ├── src/
+│   │   ├── app/              # Routes & Pages
+│   │   ├── components/       # UI & Feature Components
+│   │   ├── lib/              # Utilities (cn, api client)
+│   │   └── types/            # TypeScript Interfaces
+│   └── package.json
+└── backend/                  # FastAPI Application
+    ├── app/
+    │   ├── api/              # REST & WS Routes
+    │   ├── core/             # Config & DB setup
+    │   ├── models/           # SQLAlchemy Models
+    │   └── services/         # AI Threat Simulator
+    └── requirements.txt
+```
+
+---
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 20+
-- Docker & Docker Compose (Highly Recommended)
+- Node.js 18+
+- Python 3.10+
+- (Optional) Redis server for distributed WebSocket pub/sub.
 
-### Option 1: One-Click Startup (Docker Compose)
-
-We provide a `Makefile` to instantly orchestrate the entire platform (Postgres, Redis, Celery, FastAPI, Next.js, and Nginx).
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/CyberOracle.git
-cd CyberOracle
-
-# Start the entire SOC platform detached
-make up
-
-# Watch the startup logs
-make logs
-```
-
-- **Frontend SOC**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-### Option 2: Manual Development Setup
-
-<details>
-<summary>Click to view manual setup instructions</summary>
-
-#### Backend
+### 1. Backend Setup
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Configure environment
-cp ../infra/.env.example .env
-
-# Run database migrations
-alembic upgrade head
-
-# Start server
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload
 ```
+The backend API and AI Threat Simulator will run on `http://localhost:8000`.
 
-#### Frontend
+### 2. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-</details>
+The Command Center Dashboard will run on `http://localhost:3000`.
 
 ---
 
-## 👔 Why CyberOracle? (For Engineering Leaders)
-
-If you are a Recruiter, Engineering Manager, or CTO reviewing this repository, CyberOracle was built to demonstrate:
-
-1. **Full-Stack Mastery**: Seamless integration of a complex Python backend (FastAPI/SQLAlchemy/Celery) with a modern TypeScript frontend (Next.js 15/App Router/Zustand).
-2. **Real-Time Distributed Systems**: Implementing WebSockets backed by Redis Pub/Sub to ensure that multiple SOC clients receive live telemetry updates without polling.
-3. **Product-Minded Engineering**: Not just raw code, but extreme focus on UX immersion, aesthetic polish, and intuitive data visualization (WebGL Globes, Recharts).
-4. **Production Readiness**: Implementation of Docker health checks, JWT middleware, Error Boundaries, comprehensive API documentation, and asynchronous job queues.
-
-CyberOracle bridges the gap between a "coding project" and a "startup-grade MVP."
+## 🌐 Visual Quality Guidelines
+This project adheres to elite aesthetic standards:
+- **No placeholder UI**: Every component is polished.
+- **Deep Dark Theme**: Custom tailored `--color-cyber-bg` `#0a0e17`.
+- **Neon Accents**: Cyber cyan `#00f0ff` combined with alert reds `#ff073a`.
+- **60FPS Animations**: Optimized `framer-motion` configurations.
 
 ---
-
-## 📡 API Reference
-
-The backend exposes **39 highly optimized REST endpoints**.
-
-| Module | Endpoints | Description |
-|--------|-----------|-------------|
-| **Auth** | 5 | Register, login, refresh, profile, API keys |
-| **Threats** | 8 | CRUD, search, stats, filter by severity/category |
-| **Alerts** | 6 | CRUD, acknowledge, escalate, summary counts |
-| **Intelligence** | 6 | IOC management, enrichment, IP/domain reputation |
-| **Analytics** | 7 | Dashboard, timeline, severity, categories, MITRE heatmap |
-| **Copilot** | 3 | AI query, incident analysis, remediation generation |
-| **Health** | 2 | System status, service health |
-| **WebSocket** | 1 | Real-time threat/alert streaming |
-
-**Full Interactive OpenAPI Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
 <div align="center">
-
-**Built with precision. Engineered for defense.**
-
-⚡ CyberOracle — The Autonomous Cyber Defense Platform
-
+  <p><i>"Securing the future through predictive AI analytics."</i></p>
 </div>
