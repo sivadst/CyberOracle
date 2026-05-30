@@ -68,12 +68,12 @@ export class CyberSocket {
     this.send({ action: "unsubscribe", room });
   }
 
-  on(event: string, handler: WSHandler) {
+  on(event: string, handler: WSHandler): () => void {
     if (!this.handlers.has(event)) {
       this.handlers.set(event, new Set());
     }
     this.handlers.get(event)!.add(handler);
-    return () => this.handlers.get(event)?.delete(handler);
+    return () => { this.handlers.get(event)?.delete(handler); };
   }
 
   off(event: string, handler: WSHandler) {
