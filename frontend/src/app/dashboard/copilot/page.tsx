@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bot, Send, Sparkles, Shield, Lightbulb } from "lucide-react";
 import api, { type CopilotResponse } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useTypewriter } from "@/lib/hooks";
 
 interface Message {
   id: string;
@@ -14,6 +15,23 @@ interface Message {
   mitre?: { tactic: string; technique: string }[];
   confidence?: number;
   timestamp: Date;
+}
+
+function TypewriterMessage({ content, isTypingComplete, onComplete }: { content: string; isTypingComplete: boolean; onComplete: () => void }) {
+  const { displayedText, isTyping } = useTypewriter(content, 20);
+
+  useEffect(() => {
+    if (!isTyping && displayedText === content && !isTypingComplete) {
+      onComplete();
+    }
+  }, [isTyping, displayedText, content, isTypingComplete, onComplete]);
+
+  return (
+    <div className="text-sm text-slate-200 whitespace-pre-wrap">
+      {isTypingComplete ? content : displayedText}
+      {isTyping && <span className="inline-block w-1.5 h-3 ml-1 bg-cyan-400 animate-pulse" />}
+    </div>
+  );
 }
 
 export default function CopilotPage() {
@@ -27,11 +45,12 @@ export default function CopilotPage() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [typingIds, setTypingIds] = useState<Set<string>>(new Set());
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, typingIds]);
 
   async function handleSend() {
     if (!input.trim() || loading) return;
@@ -47,8 +66,9 @@ export default function CopilotPage() {
 
     try {
       const response = await api.askCopilot(input);
+      const msgId = (Date.now() + 1).toString();
       const aiMsg: Message = {
-        id: (Date.now() + 1).toString(),
+        id: msgId,
         role: "assistant",
         content: response.response,
         recommendations: response.recommendations,
@@ -56,12 +76,15 @@ export default function CopilotPage() {
         confidence: response.confidence,
         timestamp: new Date(),
       };
+      setTypingIds((prev) => new Set(prev).add(msgId));
       setMessages((prev) => [...prev, aiMsg]);
     } catch {
+      const msgId = (Date.now() + 1).toString();
+      setTypingIds((prev) => new Set(prev).add(msgId));
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: msgId,
           role: "assistant",
           content: "Unable to process query. Ensure the backend is running.",
           timestamp: new Date(),
@@ -94,57 +117,76 @@ export default function CopilotPage() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pr-2">
         <AnimatePresence>
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}
-            >
-              <div className={cn(
-                "max-w-[75%] rounded-xl p-4",
-                msg.role === "user"
-                  ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/20"
-                  : "glass-card"
-              )}>
-                {msg.role === "assistant" && (
-                  <div className="flex items-center gap-2 mb-2">
-                    <Bot className="w-4 h-4 text-cyan-400" />
-                    <span className="text-xs text-cyan-400 font-semibold">CyberOracle AI</span>
-                    {msg.confidence !== undefined && (
-                      <span className="text-[10px] text-slate-500 ml-auto">
-                        Confidence: {(msg.confidence * 100).toFixed(0)}%
-                      </span>
-                    )}
-                  </div>
-                )}
-                <div className="text-sm text-slate-200 whitespace-pre-wrap">{msg.content}</div>
-
-                {msg.recommendations && msg.recommendations.length > 0 && (
-                  <div className="mt-3 space-y-1.5">
-                    <div className="flex items-center gap-1 text-xs text-yellow-400">
-                      <Lightbulb className="w-3 h-3" /> Recommendations
+          {messages.map((msg) => {
+            const isCurrentlyTyping = typingIds.has(msg.id);
+            return (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}
+              >
+                <div className={cn(
+                  "max-w-[85%] lg:max-w-[75%] rounded-xl p-4 hud-brackets",
+                  msg.role === "user"
+                    ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/20"
+                    : "glass-card"
+                )}>
+                  {msg.role === "assistant" && (
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#1e293b]">
+                      <Bot className="w-4 h-4 text-cyan-400" />
+                      <span className="text-xs text-cyan-400 font-semibold tracking-wider">CYBERORACLE AI</span>
+                      {msg.confidence !== undefined && (
+                        <span className="text-[10px] text-slate-500 font-mono ml-auto">
+                          CONFIDENCE: {(msg.confidence * 100).toFixed(0)}%
+                        </span>
+                      )}
                     </div>
-                    {msg.recommendations.map((rec, i) => (
-                      <div key={i} className="text-xs text-slate-400 pl-4 border-l border-yellow-500/20">
-                        {rec}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                  )}
 
-                {msg.mitre && msg.mitre.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {msg.mitre.map((m, i) => (
-                      <span key={i} className="text-[10px] px-2 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-mono">
-                        {m.technique} — {m.tactic}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
+                  {msg.role === "assistant" && msg.id !== "welcome" ? (
+                    <TypewriterMessage 
+                      content={msg.content} 
+                      isTypingComplete={!isCurrentlyTyping}
+                      onComplete={() => {
+                        setTypingIds((prev) => {
+                          const next = new Set(prev);
+                          next.delete(msg.id);
+                          return next;
+                        });
+                      }} 
+                    />
+                  ) : (
+                    <div className="text-sm text-slate-200 whitespace-pre-wrap">{msg.content}</div>
+                  )}
+
+                  {/* Only show recommendations and MITRE if not currently typing to simulate sequential loading */}
+                  {!isCurrentlyTyping && msg.recommendations && msg.recommendations.length > 0 && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 space-y-2 bg-[#0a0e17]/50 rounded-lg p-3 border border-yellow-500/10">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-yellow-400 uppercase tracking-wider mb-2">
+                        <Lightbulb className="w-3.5 h-3.5" /> Recommended Remediation
+                      </div>
+                      {msg.recommendations.map((rec, i) => (
+                        <div key={i} className="text-xs text-slate-300 pl-3 border-l-2 border-yellow-500/30">
+                          {rec}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+
+                  {!isCurrentlyTyping && msg.mitre && msg.mitre.length > 0 && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 flex flex-wrap gap-2">
+                      {msg.mitre.map((m, i) => (
+                        <span key={i} className="text-[10px] px-2 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-mono">
+                          {m.tactic.toUpperCase()} : {m.technique}
+                        </span>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
 
         {loading && (
