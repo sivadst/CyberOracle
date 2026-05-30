@@ -70,11 +70,38 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 240, 255, 0.08);
   border-radius: 12px;
+  position: relative;
 }
 
 .glass-card-hover:hover {
   border-color: rgba(0, 240, 255, 0.2);
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+/* Tactical HUD Overlay (Corner Brackets) */
+.hud-brackets::before,
+.hud-brackets::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(0, 240, 255, 0.5);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.hud-brackets::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 12px;
+}
+
+.hud-brackets::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 12px;
 }
 
 /* Neon Glow Effects */
@@ -90,6 +117,26 @@ body {
     0 0 20px rgba(0, 240, 255, 0.2);
 }
 
+/* Typewriter Animation for Terminal Feeds */
+@keyframes type {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.typewriter-text {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #00f0ff;
+  animation: 
+    type 1.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00f0ff; }
+}
+
 /* Pulse Animation for Live Indicators */
 @keyframes cyber-pulse {
   0%, 100% { opacity: 1; }
@@ -98,6 +145,16 @@ body {
 
 .cyber-pulse {
   animation: cyber-pulse 2s ease-in-out infinite;
+}
+
+/* Critical Alert Flash */
+@keyframes alert-flash {
+  0%, 100% { border-color: rgba(255, 7, 58, 0.1); background: rgba(255, 7, 58, 0.02); }
+  50% { border-color: rgba(255, 7, 58, 0.8); background: rgba(255, 7, 58, 0.1); box-shadow: 0 0 15px rgba(255, 7, 58, 0.3); }
+}
+
+.alert-critical-flash {
+  animation: alert-flash 1.5s infinite;
 }
 
 @keyframes scan-line {
@@ -111,8 +168,9 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.15), transparent);
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
   animation: scan-line 8s linear infinite;
   pointer-events: none;
   z-index: 9999;

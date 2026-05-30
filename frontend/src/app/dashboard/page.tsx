@@ -10,7 +10,9 @@ import {
   Eye,
   TrendingUp,
   Radio,
+  Globe,
 } from "lucide-react";
+import GlobeMap from "@/components/dashboard/GlobeMap";
 import {
   AreaChart,
   Area,
@@ -174,22 +176,47 @@ export default function SOCDashboard() {
         </div>
       </motion.div>
 
-      {/* Stat Cards */}
-      <motion.div variants={fadeUp} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((card) => (
-          <div
-            key={card.label}
-            className={cn("glass-card glass-card-hover p-4 border-l-2", card.border)}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-slate-500 uppercase tracking-wider">{card.label}</span>
-              <div className={cn("w-8 h-8 rounded-lg bg-gradient-to-br flex items-center justify-center", card.color)}>
-                <card.icon className="w-4 h-4 text-white" />
-              </div>
+      {/* Top Section: Globe + Stats */}
+      <motion.div variants={fadeUp} className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* Global Threat Map */}
+        <div className="xl:col-span-2 glass-card hud-brackets p-0 overflow-hidden relative min-h-[400px] flex items-center justify-center">
+          <div className="absolute top-4 left-4 z-10">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+              <Globe className="w-4 h-4 text-cyan-400" />
+              Global Threat Vector Map
+            </h3>
+            <div className="text-[10px] text-cyan-400/70 font-mono mt-1 typewriter-text">
+              INITIALIZING GEOSPATIAL TELEMETRY...
             </div>
-            <div className="text-3xl font-bold text-white font-mono">{card.value.toLocaleString()}</div>
           </div>
-        ))}
+          <GlobeMap />
+          
+          {/* Tactical Overlays */}
+          <div className="absolute bottom-4 right-4 text-right">
+            <div className="text-[10px] text-slate-500 font-mono">LAT: 37.7749° N</div>
+            <div className="text-[10px] text-slate-500 font-mono">LNG: 122.4194° W</div>
+            <div className="text-xs text-cyan-400 font-mono mt-1 cyber-pulse">SYS_ACTIVE</div>
+          </div>
+        </div>
+
+        {/* Stat Cards Stack */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+          {statCards.map((card) => (
+            <div
+              key={card.label}
+              className={cn("glass-card hud-brackets glass-card-hover p-4 border-l-2", card.border)}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-slate-500 uppercase tracking-wider">{card.label}</span>
+                <div className={cn("w-8 h-8 rounded-lg bg-gradient-to-br flex items-center justify-center neon-glow", card.color)}>
+                  <card.icon className="w-4 h-4 text-white" />
+                </div>
+              </div>
+              <div className="text-3xl font-bold text-white font-mono">{card.value.toLocaleString()}</div>
+            </div>
+          ))}
+        </div>
       </motion.div>
 
       {/* Charts Row */}
