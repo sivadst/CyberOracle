@@ -16,6 +16,7 @@ class ApiClient {
     this.token = token;
     if (typeof window !== "undefined") {
       localStorage.setItem("co_token", token);
+      document.cookie = `auth-storage=${token}; path=/; max-age=86400; SameSite=Lax`;
     }
   }
 
@@ -32,6 +33,7 @@ class ApiClient {
     if (typeof window !== "undefined") {
       localStorage.removeItem("co_token");
       localStorage.removeItem("co_refresh");
+      document.cookie = "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
   }
 
