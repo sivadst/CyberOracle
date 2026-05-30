@@ -1,0 +1,9 @@
+# ML requirements
+numpy>=1.26.0
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+pandas>=2.2.0
+torch>=2.2.0
+transformers>=4.38.0
+sentence-transformers>=2.3.0
+matplotlib>=3.8.0

@@ -1,0 +1,69 @@
+name: CyberOracle CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: cyberoracle
+          POSTGRES_PASSWORD: cyberoracle_secret
+          POSTGRES_DB: cyberoracle_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      - name: Lint
+        run: |
+          pip install ruff black
+          ruff check backend/
+          black --check backend/
+      - name: Test
+        env:
+          DATABASE_URL: postgresql+asyncpg://cyberoracle:cyberoracle_secret@localhost:5432/cyberoracle_test
+          REDIS_URL: redis://localhost:6379/0
+        run: |
+          cd backend
+          python -c "from app.main import app; print('✓ App imports OK')"
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install & Build
+        run: |
+          cd frontend
+          npm ci
+          npm run build

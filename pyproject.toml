@@ -1,0 +1,23 @@
+[project]
+name = "cyberoracle"
+version = "1.0.0"
+description = "Next-Gen AI Cyber Warfare & Threat Intelligence Ecosystem"
+requires-python = ">=3.11"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
