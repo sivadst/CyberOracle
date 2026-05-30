@@ -9,6 +9,7 @@ from app.core.database import init_db, close_db
 from app.core.redis import redis_manager
 from app.websocket.handlers import websocket_endpoint
 from app.websocket.manager import ws_manager
+from app.services.ai_threat_simulator import threat_simulator
 from app.api.v1.routes import auth, threats, alerts, intelligence, analytics, copilot
 
 logging.basicConfig(
@@ -32,9 +33,11 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Redis unavailable (running without real-time features): {e}")
 
     logger.info("═══ CyberOracle Engine Online ═══")
+    threat_simulator.start()
     yield
 
     logger.info("═══ CyberOracle Engine Shutting Down ═══")
+    await threat_simulator.stop()
     await redis_manager.disconnect()
     await close_db()
 

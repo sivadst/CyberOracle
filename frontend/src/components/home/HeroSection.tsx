@@ -1,87 +1,99 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { ChevronDown, Terminal, Cpu } from "lucide-react";
-import Link from "next/link";
+import React from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { TerminalText } from '@/components/ui/Terminal';
+import { Shield, Activity, Lock, ArrowRight } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
-export default function HeroSection() {
+export function HeroSection() {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00f0ff] opacity-10 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="container relative z-10 px-6 mx-auto flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-3 py-1 text-xs font-mono text-[#00f0ff] uppercase bg-[#00f0ff]/10 border border-[#00f0ff]/20 rounded-full mb-8"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-pulse" />
-          System Online
+    <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center py-20">
+      <motion.div 
+        className="max-w-5xl w-full flex flex-col items-center"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.div variants={item} className="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(0,240,255,0.3)] bg-[rgba(0,240,255,0.05)] backdrop-blur-sm">
+          <div className="w-2 h-2 rounded-full bg-[#00f0ff] animate-pulse" />
+          <span className="text-xs font-mono text-[#00f0ff] tracking-widest uppercase">Defense Matrix Online</span>
         </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-          className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#94a3b8] mb-6"
+        
+        <motion.h1 
+          variants={item}
+          className="text-6xl md:text-8xl font-black tracking-tighter mb-6 text-white uppercase drop-shadow-2xl"
         >
-          <span className="block">NEURAL INTELLIGENCE</span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#bf5af2] neon-text">
-            COMMAND CENTER
-          </span>
+          Cyber<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#0088ff] neon-text">Oracle</span>
         </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="max-w-2xl text-lg md:text-xl text-[#94a3b8] mb-10 font-light"
+        
+        <motion.div variants={item} className="h-8 mb-10 flex items-center justify-center">
+          <TerminalText 
+            text="> INITIALIZING AI THREAT PREDICTION NEURAL NET..." 
+            className="text-lg md:text-xl text-[#00f0ff] opacity-80"
+            typingDuration={2.5}
+          />
+        </motion.div>
+        
+        <motion.p 
+          variants={item}
+          className="text-xl md:text-2xl text-[#94a3b8] max-w-3xl mb-14 font-light leading-relaxed"
         >
-          The epicenter of next-generation AI architecture. Powering the future of telemetry, cybernetics, and autonomous decision ecosystems.
+          Next-generation threat intelligence and autonomous cyber warfare prediction ecosystem. Securing the future through predictive AI analytics.
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex flex-col sm:flex-row items-center gap-4"
-        >
-          <Link href="/dashboard" className="group relative inline-flex items-center justify-center px-8 py-4 font-mono text-sm font-bold text-[#0a0e17] uppercase bg-[#00f0ff] rounded-sm overflow-hidden interactive hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all">
-            <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black" />
-            <span className="relative flex items-center gap-2">
-              <Terminal size={16} />
-              Initialize System
-            </span>
-            <div className="absolute inset-0 w-full h-full border-2 border-white/20 rounded-sm group-hover:border-white/50 transition-colors" />
+        
+        <motion.div variants={item} className="flex flex-col sm:flex-row gap-6 mb-24 w-full justify-center">
+          <Link href="/dashboard" className="group relative px-10 py-5 bg-[#00f0ff] text-[#0a0e17] font-bold uppercase tracking-wider rounded-md overflow-hidden transition-all hover:scale-105 neon-glow flex items-center justify-center gap-3">
+            <span className="relative z-10 text-lg">Enter Command Center</span>
+            <ArrowRight className="w-6 h-6 relative z-10 group-hover:translate-x-2 transition-transform" />
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity z-0" />
           </Link>
-          
-          <button className="group px-8 py-4 font-mono text-sm font-bold text-white uppercase bg-transparent border border-[#1e293b] rounded-sm hover:border-[#00f0ff]/50 hover:bg-[#00f0ff]/5 transition-all interactive flex items-center gap-2">
-            <Cpu size={16} className="text-[#00f0ff]" />
-            View Ecosystem
-          </button>
         </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#64748b]"
-        >
-          <span className="text-[10px] font-mono tracking-widest uppercase">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown size={16} className="text-[#00f0ff]" />
-          </motion.div>
+        {/* Feature Cards */}
+        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full text-left">
+          <Card hoverEffect className="bg-[rgba(17,24,39,0.7)] border-[rgba(0,240,255,0.15)] p-8">
+            <div className="w-12 h-12 rounded-lg bg-[rgba(0,240,255,0.1)] flex items-center justify-center mb-6 border border-[rgba(0,240,255,0.2)]">
+              <Activity className="w-6 h-6 text-[#00f0ff]" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Real-Time Threat Feed</h3>
+            <p className="text-base text-[#94a3b8] leading-relaxed">Live streaming of global cyber attack events, zero-day vulnerabilities, and CVE alerts over low-latency WebSockets.</p>
+          </Card>
+          
+          <Card hoverEffect className="bg-[rgba(17,24,39,0.7)] border-[rgba(0,240,255,0.15)] p-8">
+            <div className="w-12 h-12 rounded-lg bg-[rgba(57,255,20,0.1)] flex items-center justify-center mb-6 border border-[rgba(57,255,20,0.2)]">
+              <Shield className="w-6 h-6 text-[#39ff14]" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Predictive AI Engine</h3>
+            <p className="text-base text-[#94a3b8] leading-relaxed">Machine learning models that analyze behavioral anomalies and calculate risk severity instantaneously.</p>
+          </Card>
+          
+          <Card hoverEffect className="bg-[rgba(17,24,39,0.7)] border-[rgba(0,240,255,0.15)] p-8">
+            <div className="w-12 h-12 rounded-lg bg-[rgba(255,7,58,0.1)] flex items-center justify-center mb-6 border border-[rgba(255,7,58,0.2)]">
+              <Lock className="w-6 h-6 text-[#ff073a]" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Global Attack Map</h3>
+            <p className="text-base text-[#94a3b8] leading-relaxed">Interactive 3D visualization of cyber warfare vectors, plotting origin and destination IPs globally.</p>
+          </Card>
         </motion.div>
-      </div>
-      
-      {/* Grid overlay bottom fade */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#0a0e17] to-transparent z-10 pointer-events-none" />
-    </section>
+
+      </motion.div>
+    </div>
   );
 }
