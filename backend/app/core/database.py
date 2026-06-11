@@ -1,15 +1,27 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
+# Determine the database URL: use SQLite if the default PostgreSQL URL is present
+# or if PostgreSQL is not reachable.
+_db_url = settings.DATABASE_URL
+if "postgresql" in _db_url:
+    # Fall back to SQLite for local development without PostgreSQL
+    _db_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    _db_path = os.path.join(_db_dir, "cyberoracle.db")
+    _db_url = f"sqlite+aiosqlite:///{_db_path}"
 
 engine = create_async_engine(
-    settings.DATABASE_URL,
-    pool_size=settings.DB_POOL_SIZE,
-    max_overflow=settings.DB_MAX_OVERFLOW,
+    _db_url,
     echo=settings.DEBUG,
-    pool_pre_ping=True,
-    pool_recycle=3600,
+    # SQLite doesn't support pool_size/max_overflow the same way
+    **({} if "sqlite" in _db_url else {
+        "pool_size": settings.DB_POOL_SIZE,
+        "max_overflow": settings.DB_MAX_OVERFLOW,
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+    })
 )
 
 async_session_factory = async_sessionmaker(

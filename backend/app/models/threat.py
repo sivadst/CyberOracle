@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import String, Integer, Float, DateTime, Text, Enum as SAEnum, JSON
-from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database import Base
 import enum
@@ -41,7 +40,7 @@ class ThreatCategory(str, enum.Enum):
 class ThreatEvent(Base):
     __tablename__ = "threat_events"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     title: Mapped[str] = mapped_column(String(500), nullable=False, index=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     severity: Mapped[ThreatSeverity] = mapped_column(
@@ -69,11 +68,11 @@ class ThreatEvent(Base):
     ml_prediction: Mapped[str | None] = mapped_column(String(100), nullable=True)
     ml_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
 
-    raw_log: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    indicators: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    geo_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    raw_log: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    indicators: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    geo_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
-    organization_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True, index=True)
+    organization_id: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
     source_system: Mapped[str | None] = mapped_column(String(100), nullable=True)
     event_time: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True

@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import String, DateTime, Text, Enum as SAEnum, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import String, DateTime, Text, Enum as SAEnum, ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 import enum
@@ -26,7 +25,7 @@ class AlertStatus(str, enum.Enum):
 class Alert(Base):
     __tablename__ = "alerts"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     title: Mapped[str] = mapped_column(String(500), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     severity: Mapped[AlertSeverity] = mapped_column(SAEnum(AlertSeverity), index=True)
@@ -34,21 +33,21 @@ class Alert(Base):
         SAEnum(AlertStatus), default=AlertStatus.OPEN, index=True
     )
 
-    threat_event_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("threat_events.id"), nullable=True
+    threat_event_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("threat_events.id"), nullable=True
     )
-    assigned_to: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    assigned_to: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("users.id"), nullable=True
     )
-    escalated_to: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    escalated_to: Mapped[str | None] = mapped_column(String(36), nullable=True)
 
     rule_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     source: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    alert_metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    alert_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     remediation_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    organization_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True, index=True)
+    organization_id: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
 
     acknowledged_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
