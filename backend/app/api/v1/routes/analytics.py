@@ -54,12 +54,12 @@ async def threat_timeline(
     start = datetime.now(timezone.utc) - timedelta(days=days)
     result = await db.execute(
         select(
-            func.date_trunc("day", ThreatEvent.event_time).label("date"),
+            func.date(ThreatEvent.event_time).label("date"),
             func.count(ThreatEvent.id).label("count"),
         )
         .where(ThreatEvent.event_time >= start)
-        .group_by(func.date_trunc("day", ThreatEvent.event_time))
-        .order_by(func.date_trunc("day", ThreatEvent.event_time))
+        .group_by(func.date(ThreatEvent.event_time))
+        .order_by(func.date(ThreatEvent.event_time))
     )
     return [{"date": str(row.date), "count": row.count} for row in result.all()]
 

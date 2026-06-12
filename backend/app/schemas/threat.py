@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from uuid import UUID
 from app.models.threat import ThreatSeverity, ThreatStatus, ThreatCategory
 
 
@@ -31,7 +30,7 @@ class ThreatUpdate(BaseModel):
 
 
 class ThreatResponse(BaseModel):
-    id: UUID
+    id: str
     title: str
     description: str | None
     severity: ThreatSeverity

@@ -45,10 +45,10 @@ class AIThreatSimulator:
                 
                 # We can broadcast directly via WebSocket manager or through Redis
                 # If Redis is connected, publish to channel. Otherwise broadcast directly.
-                if redis_manager.client:
+                try:
                     import json
                     await redis_manager.client.publish("threats", json.dumps(threat_data))
-                else:
+                except (RuntimeError, Exception):
                     await ws_manager.broadcast({
                         "type": "stream:threats",
                         "data": threat_data

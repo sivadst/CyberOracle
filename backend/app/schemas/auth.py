@@ -1,6 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from uuid import UUID
 from app.models.user import UserRole
 
 
@@ -28,7 +27,7 @@ class TokenRefresh(BaseModel):
 
 
 class UserResponse(BaseModel):
-    id: UUID
+    id: str
     email: str
     username: str
     full_name: str | None
