@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from uuid import UUID
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.threat import ThreatEvent
@@ -15,7 +14,7 @@ copilot_service = CopilotService()
 class CopilotQuery(BaseModel):
     query: str
     context: dict | None = None
-    threat_id: UUID | None = None
+    threat_id: str | None = None
 
 
 class CopilotResponse(BaseModel):
@@ -27,11 +26,11 @@ class CopilotResponse(BaseModel):
 
 
 class IncidentAnalysis(BaseModel):
-    threat_id: UUID
+    threat_id: str
 
 
 class RemediationRequest(BaseModel):
-    threat_id: UUID
+    threat_id: str
     context: str | None = None
 
 

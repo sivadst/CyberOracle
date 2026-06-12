@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from datetime import datetime, timezone
-from uuid import UUID
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.alert import Alert, AlertStatus
@@ -15,7 +14,7 @@ router = APIRouter(prefix="/alerts", tags=["Alerts"])
 async def list_alerts(
     status: AlertStatus | None = None,
     severity: str | None = None,
-    assigned_to: UUID | None = None,
+    assigned_to: str | None = None,
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     db: AsyncSession = Depends(get_db),
@@ -46,7 +45,7 @@ async def create_alert(
 
 @router.get("/{alert_id}", response_model=AlertResponse)
 async def get_alert(
-    alert_id: UUID,
+    alert_id: str,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -59,7 +58,7 @@ async def get_alert(
 
 @router.patch("/{alert_id}", response_model=AlertResponse)
 async def update_alert(
-    alert_id: UUID,
+    alert_id: str,
     data: AlertUpdate,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -85,7 +84,7 @@ async def update_alert(
 
 @router.post("/{alert_id}/escalate", response_model=AlertResponse)
 async def escalate_alert(
-    alert_id: UUID,
+    alert_id: str,
     data: AlertEscalate,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),

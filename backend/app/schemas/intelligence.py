@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from datetime import datetime
-from uuid import UUID
 from app.models.ioc import IOCType, IOCVerdict
 
 
@@ -17,7 +16,7 @@ class IOCEnrichRequest(BaseModel):
 
 
 class IOCResponse(BaseModel):
-    id: UUID
+    id: str
     type: IOCType
     value: str
     verdict: IOCVerdict

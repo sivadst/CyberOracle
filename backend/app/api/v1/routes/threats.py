@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, and_, or_
 from datetime import datetime, timezone, timedelta
-from uuid import UUID
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.threat import ThreatEvent, ThreatSeverity, ThreatStatus
@@ -100,7 +99,7 @@ async def get_threat_stats(
 
 @router.get("/{threat_id}", response_model=ThreatResponse)
 async def get_threat(
-    threat_id: UUID,
+    threat_id: str,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -113,7 +112,7 @@ async def get_threat(
 
 @router.patch("/{threat_id}", response_model=ThreatResponse)
 async def update_threat(
-    threat_id: UUID,
+    threat_id: str,
     data: ThreatUpdate,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -134,7 +133,7 @@ async def update_threat(
 
 @router.delete("/{threat_id}", status_code=204)
 async def delete_threat(
-    threat_id: UUID,
+    threat_id: str,
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
